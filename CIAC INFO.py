@@ -228,7 +228,7 @@ def parseInfoByCANAC(canac):
     for lineIndex in range(len(t)):
         line = t[lineIndex]
         if 'CNPJ:&nbsp;' in line:
-            CNPJ = line[((line.index('<b>') + 3) + 3):line.index('</B>')]
+            CNPJ = line[(line.index('<b>') + 3):line.index('</B>')]
         elif 'Código ANAC:&nbsp;<b>' in line:
             CANAC = line[(line.index('<b>') + 3):line.index('</B>')]
         elif 'NomeFantasia:&nbsp;<B>' in line:

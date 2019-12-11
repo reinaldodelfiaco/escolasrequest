@@ -1,0 +1,38 @@
+﻿PP;Fase 3;1;2;3;4;5;6
+Documentação da Aeronave ;documentação obrigatória;A ;A ;E ;X ;X ;X 
+Planejamento do Voo;planejamento de voo;A ;A ;E ;X ;X ;X 
+Consulta à Meteorologia ;meteorologia;A ;A ;E ;X ;X ;X 
+Regras de Tráfego Aéreo ;regras de tráfego aéreo;A ;A ;E ;X ;X ;X 
+Livro de Bordo ;documentação obrigatória;X; X; X; X ;X ;X 
+Equipamentos de Voo;equipamentos embarcados e suas capacidades;X; X; X; X ;X ;X 
+Inspeções ;rotinas operacionais;X ;X ;X ;X ;X ;X 
+Partida ;rotinas operacionais, performance da aeronave;X ;X ;X ;X ;X ;X 
+Cheques ;rotinas operacionais;X ;X ;X ;X ;X ;X 
+Fraseologia ;regras de tráfego aéreo, fraseologia de tráfego aéreo;A ;A ;E; X ;X ;X 
+Taxiamento (rolagem) ;rotinas operacionais, operação da aeronave;X ;X ;X ;X ;X ;X 
+Decolagem ;rotinas operacionais, operação da aeronave, performance da aeronave;X ;X ;X ;X ;X ;X 
+Saída do Tráfego ;regras de tráfego aéreo, circuito de tráfego;A ;A ;E ;X ;X ;X 
+Subida(de acordo com os órgãos de controle) ;rotinas operacionais, operação da aeronave, performance da aeronave;X ;X ;X ;X ;X ;X 
+Nivelamento ;rotinas operacionais, operação da aeronave;X ;X ;X ;X ;X ;X 
+Estabelecimento do Regime de Cruzeiro ;rotinas operacionais, operação da aeronave, performance da aeronave;A ;A ;E ;X ;X ;X 
+Voo de Cruzeiro ;operação da aeronave, performance da aeronave;A ;A ;E ;X ;X ;X 
+Manutenção de Proas e Rumos ;manutenção de rota;A ;A ;E ;X ;X ;X 
+Voo em Rota ;rotinas operacionais;A ;A ;E ;X ;X ;X 
+NavegaçãoEstimada ;navegação estimada;A ;A ;E ;X ;X ;X 
+Navegação por Contato ;navegação por contato;A ;A ;E ;X ;X ;X 
+Início da Descida ;rotinas operacionais, navegação estimada;A ;A ;E ;X ;X ;X 
+Descida em Rota ;rotinas operacionais, operação da aeronave, performance da aeronave;A ;A ;E ;X ;X ;X 
+Entrada no Tráfego ;regras de tráfego aéreo, rotinas operacionais, operação da aeronave;A ;A ;E ;X ;X ;X 
+Circuito de Tráfego ;regras de tráfego aéreo, circuito de tráfego;A ;A ;E ;X ;X ;X 
+Pouso ;operação da aeronave, performance da aeronave;X ;X ;X ;X ;X ;X 
+Procedimentos após o(s) Pouso(s) ;rotinas operacionais;X ;X ;X ;X ;X ;X 
+Procedimentos de Estacionamento ;rotinas operacionais;X; X; X; X ;X ;X 
+Parada do Motor ;rotinas operacionais;X ;X ;X ;X ;X ;X 
+Reabastecimento ;rotinas operacionais;A ;A; E; X ;X ;X 
+Procedimentos para Pernoite da Aeronave ;rotinas operacionais;A ;A ;E ;X ;X ;X 
+Cheque de Abandono ;rotinas operacionais;X ;X ;X ;X ;X ;X 
+ads;;SWNS,  SWUZ;SWNS,  SWUZ;SWNS,  SWUZ,  SBCN,  SBGO;SWNS,  SWUZ,  SBCN,  SBGO;SWNS,  SWUZ,  SBCN,  SBGO;SWNS,  SWUZ,  SBCN,  SBGO
+route;;SWNS SWUZ SWNS;SWNS SWUZ SWNS;SWNS SWUZ SBCN SBGO;SWNS SWUZ SBCN SBGO;SWNS SWUZ SBCN SBGO;SWNS SWUZ SBCN SBGO
+TIPO DE VÔO ;;DC;DC;SOLO;DC;SOLO;DC
+TEMPO DE DURAÇÃO DA MISSÃO ;;01:30;01:30;02:00;02:30;03:00;02:30
+NÚMERO DE POUSOS NA MISSÃO ;;1;;;;;

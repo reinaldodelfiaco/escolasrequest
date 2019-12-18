@@ -1,0 +1,36 @@
+﻿PC;Etapa 2 Fase 4;1;N1;X1
+Planejamento;planejamento de voo;A;X;X
+Preparo do avião;rotinas operacionais;A;X;X
+Consulta à meteorologia;meteorologia;A;X;X
+Regras de tráfego aéreo;regras de tráfego aéreo;A;X;X
+Plano de voo/notificação;preenchimento de plano/notificação de voo;A;X;X
+Relatório e equipamento de voo;equipamentos embarcados e suas capacidades;A;X;X
+Inspeções;rotinas operacionais;X;X;X
+Partida;rotinas operacionais;X;X;X
+Cheques;rotinas operacionais;X;X;X
+Fraseologia;fraseologia de tráfego aéreo;X;X;X
+Rolagem;operação da aeronave, performance da  aeronave;X;X;X
+Decolagem (transição ao voo IFR);operação da aeronave, performance da  aeronave, regras de tráfego aéreo;X;X;X
+Procedimento de subida instrumento;operação da aeronave, performance da aeronave, regras de tráfego aéreo;X;X;X
+Subida (de acordo c/órgãos de controle);operação da aeronave, performance da aeronave, regras de tráfego aéreo, subidas padronizadas por instrumentos;X;X;X
+Nivelamento;operação da aeronave, performance da aeronave;X;X;X
+Regime de cruzeiro;operação da aeronave, performance da aeronave, rotinas operacionais;X;X;X
+Voo de cruzeiro;operação da aeronave, performance da aeronave;X;X;X
+Manutenção de proa;operação da aeronave, performance da aeronave;X;X;X
+Voo em rota (procedimento IFR);operação da aeronave, performance da aeronave, regras de tráfego aéreo;X;X;X
+Navegação estimada;navegação estimada;X;X;X
+Navegação rádio;radionavegação;A;X;X
+Descida em rota;operação da aeronave, performance da aeronave, regras de tráfego aéreo;X;X;X
+Procedimento IFR na terminal;radionavegação, regras de tráfego aéreo;X;X;X
+Entrada em órbita;órbitas;X;X;X
+Procedimento de descida IFR;descidas IFR;X;X;X
+Pouso a partir de aproximação por instrumentos;aproximações de não precisão, aproximações de precisão;X;X;X
+Procedimento após o pouso;operação da aeronave, rotinas operacionais;X;X;X
+Estacionamento;rotinas operacionais;X;X;X
+Corte de motor;rotinas operacionais;X;X;X
+Procedimento para pernoite;rotinas operacionais;X;X;X
+ads;;SWNS,  SBCN;SWNS,  SBCN,  SBGO;SWNS,  SBCN,  SBGO
+route;;SWNS SBCN SWNS;SWNS SBCN SBGO SWNS;SWNS SBCN SBGO SWNS
+Tipo de voo;;DC;SOLO;DC
+Duração;;2;3;3
+Números de pousos;;2;2;2

@@ -1,0 +1,23 @@
+﻿PC;Etapa 1 Fase 2;1;2;3;4;5;6;7;X1
+Relatório e equipamento de voo;equipamentos a bordo e suas capacidades;X;X;X;X;X;X;X;X
+Inspeções;rotinas operacionais;X;X;X;X;X;X;X;X
+Partida;rotinas operacionais;X;X;X;X;X;X;X;X
+Cheques;rotinas operacionais;X;X;X;X;X;X;X;X
+Fraseologia aeronáutica;fraseologia aeronáutica;X;X;X;X;X;X;X;X
+Rolagem;operação da aeronave, performance da aeronave;X;X;X;X;X;X;X;X
+Decolagem;operação da aeronave, performance da aeronave;X;X;X;X;X;X;X;X
+Tráfego;operação da aeronave, performance da aeronave, circuito de tráfego;X;X;X;X;X;X;X;X
+Aproximações de 90°;operação da aeronave, performance da aeronave, circuito de tráfego, procedimento de aproximação a 90°;A;E;X;;;;X;X
+Aproximações de 180°;operação da aeronave, performance da aeronave, circuito de tráfego, procedimento de aproximação a 180°;;;A;E;;;X;X
+Aproximações de 360°;operação da aeronave, performance da aeronave, circuito de tráfego, procedimento de aproximação a 360°;;;;;A;E;X;X
+Arremetida na final;operação da aeronave, performance da aeronave;X;X;X;X;X;X;X;X
+Pouso de precisão;operação da aeronave, performance da aeronave, aproximação de precisão;X;X;X;X;X;X;X;X
+Arremetida no solo;operação da aeronave, performance da aeronave;X;X;X;X;X;X;X;X
+Procedimentos após o pouso;rotinas operacionais;X;X;X;X;X;X;X;X
+Estacionamento;rotinas operacionais;X;X;X;X;X;X;X;X
+Corte do motor;rotinas operacionais;X;X;X;X;X;X;X;X
+Ads;;SWNS;SWNS;SWNS;SWNS;SWNS;SWNS;SWNS;SWNS
+Route;;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local
+Tipo de voo;;DC;SOLO;DC;SOLO;DC;SOLO;SOLO;DC
+Duração;;1;1;1;1;1;1;1;1
+Número de pousos;;15;15;12;12;12;12;12;10

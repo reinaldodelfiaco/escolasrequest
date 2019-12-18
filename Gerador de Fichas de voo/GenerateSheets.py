@@ -1,7 +1,7 @@
 import csv
 from docxtpl import DocxTemplate, InlineImage
 from docx.shared import Mm
-# Módulos requeridos: python-docx, jinja2
+# Módulos requeridos: docxtpl, python-docx, jinja2
 import os
 import subprocess
 import datetime
@@ -226,18 +226,14 @@ def csvParaFichasDeAvaliacao(arquivoCsv):
         # Determina o nome do arquivo a ser gerado
         nomeDoArquivo = f"Ficha de avaliação de Voo - {voos[voo]['course']} - {voos[voo]['etapaFase']} -" \
                         f" {voos[voo]['FNum']}.docx"
-        #documento = MailMerge(docModelo)  # Determina o modelo a ser utilizado
+
         # Passa o dicionário do voo, com os valores a serem utilizados para o módulo que o preencherá
-        #documento.merge(**voos[voo])
-        # Passa a lista de exercícios do voo para o preenchimento da lista de exercícios no modelo
-        #documento.merge_rows('Exercise', voos[voo]['ExList'])
-        #documento.write(nomeDoArquivo)  # Executa o preenchimento
-        # print(f'{nomeDoArquivo} gerada')  # Mostra o progresso do loop
         documento = DocxTemplate(docModelo)
-        img = InlineImage(documento, (os.getcwd()+'\\Logo.jpg'), width=Mm(37), height=Mm(36))
+        img = InlineImage(documento, (os.getcwd()+'\\Logo.jpg'), width=Mm(36), height=Mm(36))
         voos[voo]['Logo'] = img
         documento.render(voos[voo])
         documento.save(nomeDoArquivo)
+        # print(f'{nomeDoArquivo} gerada')  # Mostra o progresso do loop
 
 
 # Caso o script seja executado diretamente do terminal, ao invés de ser importado como um módulo, ele irá presumir que

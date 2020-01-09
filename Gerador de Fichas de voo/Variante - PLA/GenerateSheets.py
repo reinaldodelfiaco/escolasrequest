@@ -1,12 +1,10 @@
 import csv
 from docxtpl import DocxTemplate, InlineImage
 from docx.shared import Mm
-# Módulos requeridos: docxtpl, python-docx, jinja2
+# Módulos requeridos: 'docxtpl', python-docx, jinja2
 import os
-import subprocess
 import datetime
 import win32com.client
-
 
 
 def docx2pdf(docxCaminho, WordApp):
@@ -18,12 +16,12 @@ def docx2pdf(docxCaminho, WordApp):
         WordApp: COMObject Word Application (use win32com.client.DispatchEx('Word.Application'))
     """
     saida = docxCaminho[:-4] + 'pdf'  # Deriva o caminho e nome do arquivo PDF do arquivo .docx original
-    doc = WordApp.Documents.Open(docxCaminho, ReadOnly=0)  # Abre o arquivo .docx no Word
+    doc = WordApp.Documents.Open(docxCaminho, ReadOnly=1)  # Abre o arquivo .docx no Word em modo de leitura
     doc.SaveAs(saida, FileFormat=17)  # Número 17 equivale ao formato PDF
     doc.Close()  # Fecha o arquivo gerado
 
 
-def csvParaFichasDeAvaliacao(arquivoCsv):
+def csvParaFichasDeAvaliacao(arquivoCsv, nomeCiac):
     """
     Dado o caminho absoluto para um arquivo .csv contendo as informações necessárias, essa função gerará as fichas de
     avaliação de voo para todos os voos constantes no arquivo csv.
@@ -32,6 +30,7 @@ def csvParaFichasDeAvaliacao(arquivoCsv):
 
     Args:
         arquivoCsv: string contendo o caminho absoluto para o arquivo csv a ser usado como base.
+        nomeCiac: string contendo o nome do CIAC ao qual se destina as fichas de voo
 
         Para a função ser efetiva, o arquivo csv deve obedecer aos seguintes padrões:
         Na primeira linha:
@@ -99,6 +98,7 @@ def csvParaFichasDeAvaliacao(arquivoCsv):
         #       e a lista de dicionários contendo os exercícios e o nível de aprendizagem requerido para cada um.
 
         voos[vooNum]['course'] = dados[0][0]
+        voos[vooNum]['CIAC'] = nomeCiac
         voos[vooNum]['etapaFase'] = dados[0][1]
         voos[vooNum]['FNum'] = 'Voo ' + vooNum
         voos[vooNum]['ADIcao'] = dados[-5][i+2]
@@ -126,6 +126,8 @@ def csvParaFichasDeAvaliacao(arquivoCsv):
             voos[vooNum]['PTime'] = (dados[-2][i + 2][1] + ':00')
         elif len(dados[-2][i+2]) == 5 and dados[-2][i+2][0] == '0':
             voos[vooNum]['PTime'] = (dados[-2][i + 2][1:])
+        elif dados[-2][i+2] == '':
+            voos[vooNum]['PTime'] = 'N/A'
         else:
             voos[vooNum]['PTime'] = dados[-2][i+2]
 
@@ -183,25 +185,25 @@ def csvParaFichasDeAvaliacao(arquivoCsv):
     # Gera o objetivo da missão baseado no nome do voo e na existência ou não de conteúdos novos sendo introduzidos
     for i in range(len(chavesVoos)):
         if i == 0:
-            voos[chavesVoos[i]]['Objectives'] = 'introduzir o aluno à nova fase de voos, iniciando a partir das manobras e ' \
-                                           'procedimentos listados nas seções a seguir.'
+            voos[chavesVoos[i]]['Objectives'] = 'introduzir o aluno à nova fase de voos, iniciando a partir das ' \
+                                                'manobras e procedimentos listados nas seções a seguir.'
         elif 'X' in voos[chavesVoos[i]]['FNum'].upper():
-            voos[chavesVoos[i]]['Objectives'] = 'verificar o aprendizado do aluno em relação às manobras e exercícios ' \
-                                           'introduzidos e treinados ao longo dessa fase do treinamento.'
+            voos[chavesVoos[i]]['Objectives'] = 'verificar o aprendizado do aluno em relação às manobras e exercícios' \
+                                                ' introduzidos e treinados ao longo dessa fase do treinamento.'
         elif 'N' in voos[chavesVoos[i]]['FNum'].upper() and 'NV' not in voos[chavesVoos[i]]['FNum'].upper():
             voos[chavesVoos[i]]['Objectives'] = 'promover a prática dos exercícios treinados ao longo desta fase ' \
-                                           'no período noturno.'
+                                                'no período noturno.'
         elif voos[chavesVoos[i]]['Diff']:
             voos[chavesVoos[i]]['Objectives'] = ',além de praticar os procedimentos aprendidos em lições passadas, ' \
-                                          'introduzir o aluno à execução de procedimentos relativos a ' + \
-                                           ', '.join(sorted(voos[chavesVoos[i]]['Diff'])).lower() + '.'
+                                                'introduzir o aluno à execução de procedimentos relativos a ' + \
+                                                ', '.join(sorted(voos[chavesVoos[i]]['Diff'])).lower() + '.'
 
             lci = voos[chavesVoos[i]]['Objectives'].rfind(', ')
             voos[chavesVoos[i]]['Objectives'] = voos[chavesVoos[i]]['Objectives'][:lci] + ' e ' + \
-                                          voos[chavesVoos[i]]['Objectives'][(lci+2):]
+                                                voos[chavesVoos[i]]['Objectives'][(lci+2):]
         else:
             voos[chavesVoos[i]]['Objectives'] = 'promover a prática dos exercícios treinados ao longo desta fase do ' \
-                                          'treinamento.'
+                                                'treinamento.'
 
         # Calcula a quantidade de linhas a serem utilizadas pelo objetivo da missão na ficha de avaliação de voo
         if ((29 + len(voos[chavesVoos[i]]['Diff'])*1.05) % 75) > 0:
@@ -212,13 +214,13 @@ def csvParaFichasDeAvaliacao(arquivoCsv):
     for voo in chavesVoos:
         # Calcula o número de linhas utilizadas pelos campos objetivo, estudos prévios e instrução teórica
         linhasExistentes = voos[voo]['DiffExt'] + voos[voo]['PreviousStudyExt'] + voos[voo]['TheoricalInstructionExt']
-        linhasDispPrimPag = 25 - linhasExistentes
+        linhasDispPrimPag = 19 + 3 - linhasExistentes
         linhasNecessarias = len(voos[voo]['ExList'])
 
         # Determina o modelo que oferece melhor racionalização do espaço baseado no número de linhas disponíveis na
         # primeira página e o número de linhas necessárias para comportar a lista de exercícios a serem avaliados.
-        if (linhasNecessarias <= linhasDispPrimPag) or ((linhasNecessarias // 44) > 0
-                                                        and (linhasNecessarias % 44) <= linhasDispPrimPag):
+        if (linhasNecessarias <= linhasDispPrimPag) or ((linhasNecessarias // 41) > 0
+                                                        and (linhasNecessarias % 41) <= linhasDispPrimPag):
             docModelo = 'Modelo0.docx'
         else:
             docModelo = 'Modelo1.docx'
@@ -241,12 +243,13 @@ def csvParaFichasDeAvaliacao(arquivoCsv):
 # fichas de avaliação de voo a partir deles.
 
 if __name__ == '__main__':
+    ciac = input('Nome do CIAC: ')
     docInicio = datetime.datetime.now()  # Registra o tempo de início da execução do script
     diretorio = os.listdir(os.getcwd())  # Gera uma lista com todos os arquivos dentro do diretório
 
-    for arquivo in diretorio:  # Para todos os arquivos csv no diretório, executa a função csvParaFichasDeAvaliação
-        if arquivo[-4:].lower() == '.csv' and 'example' not in arquivo and '#' not in arquivo:
-            csvParaFichasDeAvaliacao(arquivo)
+    for arquivos in diretorio:  # Para todos os arquivos csv no diretório, executa a função csvParaFichasDeAvaliação
+        if arquivos[-4:].lower() == '.csv':
+            csvParaFichasDeAvaliacao(arquivos, ciac)
 
     deltaT = str(datetime.datetime.now() - docInicio).split(':')  # Calcula o tempo gasto para gerar os arquivos .docx
     contagem = 0
@@ -263,7 +266,6 @@ if __name__ == '__main__':
           f"{f'{round(float(deltaT[2]), 1)} segundo' if float(deltaT[2]) > 0 else ''}"
           f"{'s' if round(float(deltaT[2]), 1) > 1 else ''}")
 
-    #Conversão para PDF
     try:
         diretorio = os.listdir(os.getcwd())
         # Gera o COMObject Word.Application necessário à função docx2pdf
@@ -276,7 +278,6 @@ if __name__ == '__main__':
                 contagemFichas += 1
                 # print(f'{docx[:-5]}.pdf gerada')  # Mostra o progresso da conversão
         deltaT = str(datetime.datetime.now() - conversaoPDF).split(':')  # Calcula o tempo necessário para a conversão
-        msWord.Quit()  # Encerra o COMObject Word.Application
         print(f"Conversão para .pdf terminada em {f'{int(deltaT[1])} minuto' if int(deltaT[1]) > 0 else ''}"
               f"{'s' if int(deltaT[1]) > 1 else ''}"
               f"{' e ' if int(deltaT[1]) > 0 and round(float(deltaT[2]), 1) > 0 else ''}"

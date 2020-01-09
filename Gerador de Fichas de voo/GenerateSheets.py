@@ -18,7 +18,7 @@ def docx2pdf(docxCaminho, WordApp):
         WordApp: COMObject Word Application (use win32com.client.DispatchEx('Word.Application'))
     """
     saida = docxCaminho[:-4] + 'pdf'  # Deriva o caminho e nome do arquivo PDF do arquivo .docx original
-    doc = WordApp.Documents.Open(docxCaminho, ReadOnly=1)  # Abre o arquivo .docx no Word em modo de leitura
+    doc = WordApp.Documents.Open(docxCaminho, ReadOnly=0)  # Abre o arquivo .docx no Word
     doc.SaveAs(saida, FileFormat=17)  # Número 17 equivale ao formato PDF
     doc.Close()  # Fecha o arquivo gerado
 
@@ -280,6 +280,7 @@ if __name__ == '__main__':
                 contagemFichas += 1
                 # print(f'{docx[:-5]}.pdf gerada')  # Mostra o progresso da conversão
         deltaT = str(datetime.datetime.now() - conversaoPDF).split(':')  # Calcula o tempo necessário para a conversão
+        msWord.Quit()  # Encerra o COMObject Word.Application
         print(f"Conversão para .pdf terminada em {f'{int(deltaT[1])} minuto' if int(deltaT[1]) > 0 else ''}"
               f"{'s' if int(deltaT[1]) > 1 else ''}"
               f"{' e ' if int(deltaT[1]) > 0 and round(float(deltaT[2]), 1) > 0 else ''}"

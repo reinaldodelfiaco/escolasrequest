@@ -49,8 +49,8 @@ Procedimentos em caso de fogo no motor em voo;procedimentos de emergência em ca
 Procedimentos em caso de trepidação do motor em voo;procedimentos de emergência em caso de trepidação;;;;;M;C;E;X;X;X;;;;;;;X;X;
 Procedimentos para eliminação de fumaça em voo;procedimentos de emergência em caso de fumaça;;;;;;M;C;E;X;X;;;;;;;X;X;
 Procedimentos em caso de vibração da hélice em voo;procedimentos de emergência em casos de vibração da hélice;;;;;;M;C;E;X;X;;;;;;;X;X;
-ADS;;SWNS;SWNS;SWNS;SWNS;SWNS;SWNS;SWNS;SWNS;SWNS;SWNS;SWNS;SWNS;SWNS;SWNS;SWNS;SWNS;SWNS;SWNS;SWNS
-Route;;SWNS SBR606 SWNS;SWNS SBR606 SWNS;SWNS SBR606 SWNS;SWNS SBR606 SWNS;SWNS SBR606 SWNS;SWNS SBR606 SWNS;SWNS SBR606 SWNS;SWNS SBR606 SWNS;SWNS SBR606 SWNS;SWNS SBR606 SWNS;SWNS SBR606 SWNS;SWNS SBR606 SWNS;Voo local;Voo local;Voo local;Voo local;SWNS SBR606 SWNS;Voo local;Voo local
+ADS;;SSKM ;SSKM ;SSKM ;SSKM ;SSKM ;SSKM ;SSKM ;SSKM ;SSKM ;SSKM ;SSKM ;SSKM ;SSKM ;SSKM ;SSKM ;SSKM ;SSKM ;SSKM ;SSKM 
+Route;;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local
 TIPO DE VOO;;DC;DC;DC;DC;DC;DC;DC;DC;DC;DC;DC;DC;DC;DC;DC;DC;DC;DC;DC
 Duração do voo (horas e minutos);;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1; 2;;2
 Nº de pousos na missão;;1;1;2;2;2;2;2;3;3;3;3;4;4;4;6;8;;;1

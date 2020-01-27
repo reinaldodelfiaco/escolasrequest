@@ -4,7 +4,7 @@ from docx.shared import Mm
 # Módulos requeridos: 'docxtpl', python-docx, jinja2
 import os
 import datetime
-import win32com.client
+import win32com.clientA
 import subprocess
 
 

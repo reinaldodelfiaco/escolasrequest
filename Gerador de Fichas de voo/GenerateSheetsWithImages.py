@@ -7,7 +7,6 @@ import datetime
 import win32com.client
 import subprocess
 
-
 def pdf2img(caminhoArquivoPDF):
     """
     Dado o caminho absoluto para um arquivo .pdf, essa função o converterá em imagens, gerando um arquivo .jpeg para

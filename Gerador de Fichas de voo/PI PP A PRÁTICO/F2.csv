@@ -21,8 +21,8 @@ Arremetida no solo ;rotinas operacionais, operação da aeronave, performance da
 Corrida após o pouso ;rotinas operacionais, operação da aeronave, performance da aeronave;X ;X; X ;X; X ;X; X; X ;X ;X 
 Parada do motor ;rotinas operacionais;X ;X; X ;X; X ;X; X; X ;X ;X 
 Cheque de abandono ;rotinas operacionais;X ;X; X ;X; X ;X; X; X ;X ;X 
-ADS;;SWNS;SWNS;SWNS;SWNS;SWNS;SWNS;SWNS;SWNS;SWNS;SWNS
+ADS;;SSKM;SSKM;SSKM;SSKM;SSKM;SSKM;SSKM;SSKM;SSKM;SSKM
 Route;;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local
-TIPO DE VÔO ;;DC ;DC ;DC ;DC ;SÓ ;DC ;SÓ; DC ;SÓ;DC 
+TIPO DE VOO ;;DC ;DC ;DC ;DC ;SO;DC ;SO; DC ;SO;DC 
 Duração do voo (horas) ;;1;1;1;1;1;1;1;2;1;
 Nº de pousos ;;8;8;8;8;8;8;8;8;6;

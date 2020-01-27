@@ -1,0 +1,36 @@
+﻿PC;Etapa 1 Fase 1;1;2;3;4;5;X1;N1;N2
+Relatório e equipamento de voo;equipamentos a bordo e suas capacidades;M;A;E;X;X;X;X;X
+Inspeções;rotinas operacionais;M;A;E;X;X;X;X;X
+Partida;rotinas operacionais;M;A;E;X;X;X;X;X
+Cheques;rotinas operacionais;M;A;E;X;X;X;X;X
+Fraseologia aeronáutica;fraseologia aeronáutica;M;A;E;X;X;X;X;X
+Rolagem;performance da aeronave;M;A;E;X;X;X;X;X
+Decolagem normal;performance da aeronave;M;;;E;X;X;X;X
+Decolagem curta;performance da aeronave;;M;E;;;X;;
+Subida para a área de instrução;performance da aeronave;M;A;E;X;X;X;;
+Nivelamento;performance da aeronave;M;A;E;X;X;X;X;X
+Apresentação da área de instrução;características da área de instrução;M;A;E;X;X;X;;
+Uso dos comandos;operação da aeronave;M;A;E;X;X;X;X;X
+Uso do motor;operação da aeronave;M;A;E;X;X;X;X;X
+Uso dos compensadores;operação da aeronave;M;A;E;X;X;X;X;X
+Rotas e curvas subindo;performance da aeronave, operação da aeronave;M;A;E;X;X;X;X;X
+Rotas e curvas descendo;performance da aeronave, operação da aeronave;M;A ;E;X;X;X;X;X
+Voo nivelado;performance da aeronave, operação da aeronave;M;A;E;X;X;X;X;X
+Curvas de pequena e média inclinações;performance da aeronave, operação da aeronave;M;A;E;X;X;X;X;X
+Curva de grande inclinação;performance da aeronave, operação da aeronave;;M;C;;E;X;;
+Estol com motor (1º e 2º tipos);performance da aeronave, operação da aeronave, recuperação de atitudes anormais;;M;C;E;;X;;
+Estol sem motor (1º e 2º tipos);performance da aeronave, operação da aeronave, recuperação de atitudes anormais;;M;C;E;;X;;
+Voo em retângulo;performance da aeronave, operação da aeronave;;;M;A;E;X;;
+Pane simulada;rotinas operacionais, operação da aeronave, recuperação de panes;;;;M;;;;
+Pane simulada a baixa altura;rotinas operacionais, operação da aeronave, recuperação de panes;;;;M;;;;
+Descida para o tráfego;performance da aeronave, operação da aeronave, circuito de tráfego;M;A;E;;;X;;
+Entrada no tráfego;circuito de tráfego;M;A;E;;;X;X;X
+Pouso normal;operação da aeronave, performance da aeronave;M;A;;E;;;;
+Pouso curto;operação da aeronave, performance da aeronave;;;M;A;E;X;;
+Emergência após a decolagem;procedimentos de emergência;;;M;;;;;
+Emergência durante o voo;procedimentos de emergência;;M;;;;;;
+Ads;;SWNS;SWNS;SWNS;SWNS;SWNS;SWNS;SWNS;SWNS
+Route;;SWNS SBR606 SWNS;SWNS SBR606 SWNS;SWNS SBR606 SWNS;SWNS SBR606 SWNS;SWNS SBR606 SWNS;SWNS SBR606 SWNS;SWNS SBR606 SWNS;SWNS SBR606 SWNS
+Tipo de voo;;DC;DC;DC;DC;DC;DC;DC;DC
+Duração;;1;1;1;1;1;1;1;1
+Números de pousos;;1;1;1;1;1;1;5;5

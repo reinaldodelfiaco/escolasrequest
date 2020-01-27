@@ -1,0 +1,35 @@
+﻿PC;Etapa 1 Fase 4;1;2;3;4;5;X1;6;7;8;9;10;X2
+Planejamento;planejamento de voo;A;E;E;X;X;X;X;X;X;X;X;X
+Preparo do avião;rotinas operacionais;A;A;E;X;X;X;X;X;X;X;X;X
+Consulta à meteorologia;meteorologia;A;E;E;X;X;X;X;X;X;X;X;X
+Regras de tráfego aéreo;regras de tráfego aéreo;A;E;E;X;X;X;X;X;X;X;X;X
+Plano/Notificação de voo;preenchimento de plano/notificação de voo;A;E;E;X;X;X;X;X;X;X;X;X
+Relatórios e equipamentos de voo;equipamentos a bordo e suas capacidades;A;E;E;X;X;X;X;X;X;X;X;X
+Inspeções;rotinas operacionais;X;X;X;X;X;X;X;X;X;X;X;X
+Partida;rotinas operacionais;X;X;X;X;X;X;X;X;X;X;X;X
+Cheques;rotinas operacionais;X;X;X;X;X;X;X;X;X;X;X;X
+Fraseologia aeronáutica;fraseologia aeronáutica;A;E;E;X;X;X;X;X;X;X;X;X
+Rolagem;operação da aeronave, performance da aeronave;X;X;X;X;X;X;X;X;X;X;X;X
+Decolagem;operação da aeronave, performance da aeronave;X;X;X;X;X;X;X;X;X;X;X;X
+Saída de tráfego;operação da aeronave, circuito de tráfego;A;E;E;X;X;X;X;X;X;X;X;X
+Subida (de acordo com órgão de controle);coordenação com órgão ATC, regras de tráfego aéreo;A;E;E;X;X;X;X;X;X;X;X;X
+Nivelamento;operação da aeronave;X;X;X;X;X;X;X;X;X;X;X;X
+Regime de cruzeiro;operação da aeronave, performance da aeronave;A;E;E;X;X;X;X;X;X;X;X;X
+Manutenção de proa;operação da aeronave;A;E;E;X;X;X;X;X;X;X;X;X
+Voo em rota;operação da aeronave;A;E;E;X;X;X;X;X;X;X;X;X
+Navegação estimada;navegação estimada;A;E;E;X;X;X;X;X;X;X;X;X
+Navegação por contato;navegação por contato;A;E;E;X;X;X;X;X;X;X;X;X
+Início da descida;operação da aeronave;X;X;X;X;X;X;X;X;X;X;X;X
+Descida em rota;operação da aeronave;A;E;E;X;X;X;X;X;X;X;X;X
+Entrada no tráfego;circuito de tráfego, regras de tráfego aéreo;A;E;E;X;X;X;X;X;X;X;X;X
+Tráfego;circuito de tráfego, regras de tráfego aéreo;X;X;X;X;X;X;X;X;X;X;X;X
+Pouso;operação da aeronave, performance da aeronave;X;X;X;X;X;X;X;X;X;X;X;X
+Procedimento após o pouso;rotinas operacionais;X;X;X;X;X;X;X;X;X;X;X;X
+Estacionamento;rotinas operacionais;X;X;X;X;X;X;X;X;X;X;X;X
+Corte do motor;rotinas operacionais;X;X;X;X;X;X;X;X;X;X;X;X
+Procedimento para pernoite;rotinas operacionais;A;E;E;X;X;X;X;X;X;X;X;X
+Ads;;SWNS, SWUZ;SWNS, SWUZ, SBCN;SWNS, SBCN;SWNS, SWUZ, SWCN;SWNS, SBCN;SWNS, SWUZ, SWCN;SWNS, SBCN;SWNS, SBCN, SBGO;SWNS, SBUZ, SBCN;SWNS, SBCN;SWNS, SBCN, SBGO;SWNS, SWUZ, SBCN, SBGO
+Route;;SWNS SWUZ SWNS;SWNS SWUZ SBCN SWNS;SWNS SBCN SWNS;SWNS SWUZ SBCN SWNS;SWNS SBCN SWNS;SWNS SWUZ SBCN SWNS;SWNS SBCN SWNS;SWNS SBCN SBGO SWNS;SWNS SWUZ SBCN SWNS;SWNS SBCN SWNS;SWNS SBCN SBGO SWNS;SWNS SWUZ SBCN SBGO SWNS
+Tipo de voo;;DC;SOLO;DC;SOLO;DC;DC;SOLO;SOLO;DC;SOLO;DC;DC
+Duração;;2;4;3;4;3;4;3;4;4;3;4;5
+Números de pousos;;2;2;2;2;2;2;2;2;3;2;2;3

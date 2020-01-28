@@ -1,0 +1,56 @@
+﻿PP;Fase 1;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;X1;18
+Livro de bordo/ equip. de voo;documentação obrigatória, equipamentos embarcados e suas capacidades;M;M;C;C;A;A;E;X;X;X;X;X;X;X;X;X;X;X;X
+Inspeções;rotinas operacionais;M;M;C;C;A;A;E;X;X;X;X;X;X;X;X;X;X;X;X
+Partida do motor;rotinas operacionais;M;M;C;C;C;A;E;X;X;X;X;X;X;X;X;X;X;X;X
+Cheques;rotinas operacionais;M;M;C;C;C;A;E;X;X;X;X;X;X;X;X;X;X;X;X
+Fraseologia;regras de tráfego aéreo, fraseologia aeronáutica;M;M;M;C;C;A;A;E;X;X;X;X;X;X;X;X;X;X;X
+Rolagem (taxiamento);rotinas operacionais, operação da aeronave;M;M;C;C;C;A;A;E;X;X;X;X;X;X;X;X;X;X;X
+Decolagem normal;operação da aeronave, performance da aeronave;M;M;M;C;C;C;A;A;E;X;X;X;X;X;X;X;X;X;X
+Saída do tráfego;operação da aeronave, regras de tráfego aéreo;M;M;M;C;C;C;A;E;X;X;X;X;X;X;X;X;X;X;X
+Subida para a área de instrução;operação da aeronave, regras de tráfego aéreo;M;M;M;C;C;A;E;X;X;X;X;X;X;X;X;X;X;X;X
+Nivelamento;operação da aeronave, rotinas operacionais;M;M;C;C;A;E;X;X;X;X;X;X;X;X;X;X;X;X;X
+Identificação da área de instrução;características da área de instrução, rotinas operacionais;M;M;C;C;C;X;X;X;X;X;X;X;X;X;X;X;X;X;
+Uso dos comandos de voo;operação da aeronave;M;M;C;C;A;A;A;E;X;X;X;X;X;X;X;X;X;X;X
+Uso do motor;operação da aeronave, performance da aeronave;M;M;C;C;A;A;E;X;X;X;X;X;X;X;X;X;X;X;X
+Uso do compensador;operação da aeronave, performance da aeronave;M;M;C;C;A;A;E;X;X;X;X;X;X;X;X;X;X;X;X
+Retas e curvas subindo;operação da aeronave, performance da aeronave;M;M;C;C;A;E;X;X;X;X;X;X;X;X;X;X;X;X;X
+Retas e curvas descendo;operação da aeronave, performance da aeronave;M;M;C;C;A;E;X;X;X;X;X;X;X;X;X;X;X;X;X
+Voo nivelado;operação da aeronave, performance da aeronave;M;M;C;C;A;E;X;X;X;X;X;X;X;X;X;X;X;X;X
+Orientação por referencia no solo;navegação por contato;M;M;M;C;C;C;X;X;X;X;X;X;X;X;X;X;X;X;
+Curvas de pequena inclinação;operação da aeronave, performance da aeronave;M;M;C;A;E;X;X;X;X;X;X;X;X;X;X;X;X;X;X
+Curvas de média inclinação;operação da aeronave, performance da aeronave;M;M;C;A;E;X;X;X;X;X;X;X;X;X;X;X;X;X;X
+Voo em retângulo;regras de tráfego aéreo, operação da aeronave;;;;C;E;X;X;X;X;X;X;X;X;X;X;X;X;X;
+Estol sem motor;operação da aeronave, performance da aeronave, recuperação de atitudes anormais;;;;M;C;A;E;;;X;;;;;;;X;X;
+Estol com motor;operação da aeronave, performance da aeronave, recuperação de atitudes anormais;;;;;M;C;A;E;;X;;;;;;;X;X;
+Voo planado;operação da aeronave, performance da aeronave;;;;M;C;A;A;E;;X;;;;;;;X;X;
+Pane simulada alta;operação da aeronave, performance da aeronave, procedimentos para diagnóstico e remediação de panes;;;;;;M;C;C;C;A;A;A;E;X;X;X;X;X;
+Pane simulada a baixa altura;operação da aeronave, performance da aeronave, procedimentos para diagnóstico e remediação de panes;;;;;;;;C;C;A;A;A;E;X;X;X;X;X;
+'S'' sobre estrada;operação da aeronave, S sobre estradas;;;;;;;;M;C;A;E;;;;;;X;X;
+Glissagem alta;operação da aeronave, performance da aeronave;;;;;;;;M;C;A;E;;;;;;X;X;
+Oito sobre marcos;operação da aeronave, oito sobre marcos;;;;;;;;;;C;A;E;;;;;X;X;
+Curva de grande inclinação;operação da aeronave, performance da aeronave;;;;;;;;;;C;A;E;;;;;X;X;
+Descida para tráfego;operação da aeronave, regras de tráfego aéreo, circuito de tráfego;M;M;M;C;C;A;E;X;X;X;X;X;;;;;X;X;X
+Entrada no tráfego;operação da aeronave, regras de tráfego aéreo, circuito de tráfego;M;M;M;C;C;A;E;X;X;X;X;X;X;X;X;X;X;X;X
+Circuito de tráfego;operação da aeronave, regras de tráfego aéreo, circuito de tráfego;M;M;M;M;C;C;C;A;E;X;X;X;X;X;X;X;X;X;X
+Enquadramento da pista;operação da aeronave;M;M;M;M;C;C;C;C;A;A;A;E;X;X;X;X;X;X;X
+Glissagem em final alta;operação da aeronave, performance da aeronave;;;;;;;;;;;A;A;E;;;;X;X;
+Aproximação final;operação da aeronave, performance da aeronave;M;M;M;M;C;C;C;C;A;A;A;E;X;X;X;X;X;X;X
+Arremetida no ar;operação da aeronave, performance da aeronave;;;;M;M;M;C;C;C;A;A;E;X;X;X;X;X;X;X
+Pouso normal;operação da aeronave, performance da aeronave;M;M;M;M;M;C;C;C;C;C;A;A;A;E;X;X;X;X;X
+Manutenção da reta após o pouso;operação da aeronave, performance da aeronave;M;M;M;M;C;C;C;C;A;A;A;E;X;X;X;X;X;X;X
+Arremetida no solo;operação da aeronave, performance da aeronave;;;;M;M;C;C;C;A;A;A;E;X;X;X;X;X;X;
+Arremetida na final;operação da aeronave, performance da aeronave;;;;M;M;C;C;C;A;A;A;E;X;X;X;X;X;X;
+Procedimentos após o pouso;rotinas operacionais;;M;M;M;C;C;A;A;E;X;X;X;X;X;X;X;X;X;X
+Estacionamento da Aeronave;rotinas operacionais;M;M;M;C;C;A;A;E;X;X;X;X;X;X;X;X;X;X;X
+Parada do motor;rotinas operacionais;M;M;C;C;A;A;E;X;X;X;X;X;X;X;X;X;X;X;X
+Cheque de abandono;rotinas operacionais;M;M;C;C;A;A;E;X;X;X;X;X;X;X;X;X;X;X;X
+Procedimentos em caso de fogo motor na partida;procedimentos de emergência em caso de fogo;;;M;C;E;X;X;X;X;X;;;;;;;X;X;
+Procedimentos em caso de fogo no motor em voo;procedimentos de emergência em caso de fogo;;;;M;C;E;X;X;X;X;;;;;;;X;X;
+Procedimentos em caso de trepidação do motor em voo;procedimentos de emergência em caso de trepidação;;;;;M;C;E;X;X;X;;;;;;;X;X;
+Procedimentos para eliminação de fumaça em voo;procedimentos de emergência em caso de fumaça;;;;;;M;C;E;X;X;;;;;;;X;X;
+Procedimentos em caso de vibração da hélice em voo;procedimentos de emergência em casos de vibração da hélice;;;;;;M;C;E;X;X;;;;;;;X;X;
+ADS;;SJWQ;SJWQ;SJWQ;SJWQ;SJWQ;SJWQ;SJWQ;SJWQ;SJWQ;SJWQ;SJWQ;SJWQ;SJWQ;SJWQ;SJWQ;SJWQ;SJWQ;SJWQ;SJWQ
+Route;;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local
+TIPO DE VOO;;DC;DC;DC;DC;DC;DC;DC;DC;DC;DC;DC;DC;DC;DC;DC;DC;DC;DC;DC
+Duração do voo (horas e minutos);;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1; 2;;2
+Nº de pousos na missão;;1;1;2;2;2;2;2;3;3;3;3;4;4;4;6;8;;;1

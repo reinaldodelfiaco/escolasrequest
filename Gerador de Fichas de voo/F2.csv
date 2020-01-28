@@ -1,0 +1,28 @@
+﻿PP;Fase 2;1;2;3;4;5;6;7;8;9;X1
+Livro de bordo / equipamento de voo;documentação obrigatória, equipamentos a bordo e suas capacidades;X ;X ;X ;X ;X ;X ;X ;X ;X ;X 
+Inspeções ;rotinas operacionais;X ;X ;X ;X ;X ;X ;X ;X ;X ;X 
+Partida do motor ;rotinas operacionais, operação da aeronave;X ;X ;X ;X ;X ;X ;X ;X ;X ;X 
+Cheques ;rotinas operacionais;X ;X; X ;X; X ;X; X; X ;X ;X 
+Fraseologia de tráfego aéreo;regras de tráfego aéreo, fraseologia de tráfego aéreo;X ;X ;X ;X ;X ;X ;X ;X ;X ;X 
+Rolagem (taxiamento) ;rotinas operacionais, operação da aeronave;X ;X; X ;X; X ;X; X; X ;X ;X 
+Decolagem normal ;operação da aeronave, performance da aeronave;X ;;X ;X; X ;X; X; X ;X ;X 
+Decolagem curta ;operação da aeronave, performance da aeronave;A ;E ;X ;X ;;;;;;X 
+Decolagem com obstáculo ;operação da aeronave, performance da aeronave;;A ;E ;X ;;;;;;X 
+Pane simulada a baixa altura ;rotinas operacionais, operação da aeronave, performance da aeronave, procedimentos de diagnóstico e solução de panes;X ;X ;X ;X ;;;;;;X 
+Aproximação a 90°;operação da aeronave, performance da aeronave, aproximação a 90°;;;C ;A ;E ;;;;;X 
+Aproximação de 180°;operação da aeronave, performance da aeronave, aproximação a 180°;;;;C ;;A ;E ;;;X 
+Aproximação de 360°;operação da aeronave, performance da aeronave, aproximação a 360°;;;;;;;;A ;E ;X 
+Circuito de tráfego ;regras de tráfego aéreo, circuito de tráfego;X ;X; X ;X; X ;X; X; X ;X ;X 
+Arremetida na final ;rotinas operacionais, operação da aeronave, performance da aeronave;X ;X ;X ;X ;X ;;X ;;X ;X 
+Pouso normal ;rotinas operacionais, operação da aeronave, performance da aeronave;X ;;;X ;X ;X ;X ;X ;X ;X 
+Pouso curto ;rotinas operacionais, operação da aeronave, performance da aeronave;A ;E ;;;;;;;;X 
+Pouso de Pista ;rotinas operacionais, operação da aeronave, performance da aeronave;;A ;E ;;;;;;;X 
+Arremetida no solo ;rotinas operacionais, operação da aeronave, performance da aeronave;X ;X ;X ;X ;X ;X ;X ;X ;X ;X 
+Corrida após o pouso ;rotinas operacionais, operação da aeronave, performance da aeronave;X ;X; X ;X; X ;X; X; X ;X ;X 
+Parada do motor ;rotinas operacionais;X ;X; X ;X; X ;X; X; X ;X ;X 
+Cheque de abandono ;rotinas operacionais;X ;X; X ;X; X ;X; X; X ;X ;X 
+ADS;;SJWQ;SJWQ;SJWQ;SJWQ;SJWQ;SJWQ;SJWQ;SJWQ;SJWQ;SJWQ
+Route;;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local;Voo local
+TIPO DE VOO ;;DC ;DC ;DC ;DC ;SO;DC ;SO; DC ;SO;DC 
+Duração do voo (horas) ;;1;1;1;1;1;1;1;2;1;
+Nº de pousos ;;8;8;8;8;8;8;8;8;6;

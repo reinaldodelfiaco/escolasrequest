@@ -1,36 +1,58 @@
 import requests
 import datetime
 import csv
+from bs4 import BeautifulSoup
+import re
 
-indexFile = input("caminho para o arquivo de índice: ")
-outputFile = f'{input("caminho e nome do arquivo sem extensão: ")}.csv'
 
-def getCanacsFromIndex(indexFileOrPath):
+def get_canacs_from_index():
     """
-    Dado um arquivo html contendo o índice de instituições de ensino, retirado do site
-    www.anac.gov.br/educator/index2.aspx, esta função retornará uma lista contendo o código ANAC de todas
+    Esta função se comunicará com o site www.anac.gov.br/educator/index2.aspx, solicitará as informações de todas as
+     escolas de aviação cadastradas no índice de educadores e retornará uma lista contendo o código ANAC de todas
     as instituições de ensino constantes no referido índice.
 
-    :param indexFileOrPath: Nome do .HTML contendo o índice de instituições, se na mesma pasta que este script
-                            ou caminho deste arquivo .HTML.
-    :return: Lista contendo o código ANAC (CANAC) de todas as instituições presentes no índice dado como parâmetro.
+    :param
+    :return: Lista contendo o código ANAC (CANAC) de todas as instituições presentes no índice de educadores da ANAC.
     """
-    with open(indexFileOrPath, 'r', encoding='utf8') as fileHandle:
-        data = fileHandle.readlines()
+    print(f'\n[{datetime.datetime.now().strftime("%H:%M:%S")}] Recuperando CANACs do índice de educadores')
+    process_start = datetime.datetime.now()
+    requests_session = requests.Session()
+    request = requests_session.get('https://sistemas.anac.gov.br/educator/Index2.aspx')
+    parsed_html_get_response = BeautifulSoup(request.text, 'html.parser')
 
-    CANACsList = []
+    view_state = parsed_html_get_response.find(id='__VIEWSTATE').attrs['value']
+    view_state_generator = parsed_html_get_response.find(id='__VIEWSTATEGENERATOR').attrs['value']
+    event_validation = parsed_html_get_response.find(id='__EVENTVALIDATION').attrs['value']
 
-    for line in data:
-        if 'entidade.Asp?cod' in line:
-            line = line.split("'")
-            for part in line:
-                if 'entidade.Asp?cod=' in part:
-                    CANACsList.append(part.strip('entidade.Asp?cod='))
+    data_to_post = {'__VIEWSTATE': view_state,
+                    '__VIEWSTATEGENERATOR': view_state_generator,
+                    '__EVENTVALIDATION': event_validation,
+                    'ctl00$ContentPlaceHolder1$Codigo': '',
+                    'ctl00$ContentPlaceHolder$CNPJ': '',
+                    'ctl00$ContentPlaceHolder$NomeEscola': '',
+                    'ctl00$ContentPlaceHolder$Cidade': '',
+                    'ctl00$ContentPlaceHolder$UF': 'Todos',
+                    'ctl00$ContentPlaceHolder$ListaCurso': 'Todos',
+                    'ctl00$ContentPlaceHolder$Button1': 'Buscar', }
 
-    return CANACsList
+    post_response = requests_session.post('https://sistemas.anac.gov.br/educator/Index2.aspx', data=data_to_post)
+    parsed_html_post_response = BeautifulSoup(post_response.text, 'html.parser')
+
+    appropriate_wildcard = re.compile('ContentPlaceHolder1_DataList1_Cod_EscolaLabel_')
+    canac_list = [tag.contents[0] for tag in parsed_html_post_response.findAll("span", {'id': appropriate_wildcard})]
+
+    delta_t = str(datetime.datetime.now() - process_start).split(':')
+    print(f"[{datetime.datetime.now().strftime('%H:%M:%S')}] - Esse processo encontrou {len(canac_list)} escolas e levou "
+          f"{f'{int(delta_t[1])} minuto' if int(delta_t[1]) > 0 else ''}"
+          f"{'s' if int(delta_t[1]) > 1 else ''}"
+          f"{' e ' if int(delta_t[1]) > 0 and round(float(delta_t[2]), 1) > 0 else ''}"
+          f"{f'{round(float(delta_t[2]), 1)} segundo' if float(delta_t[2]) > 0 else ''}"
+          f"{'s' if round(float(delta_t[2]), 1) > 1 else ''}\n")
+
+    return canac_list
 
 
-def genFirstLine():
+def gen_first_line():
     """
     Esta função gera a primeira linha do arquivo csv, correspondente às colunas da tabela.
     Neste formato, cada linha representa uma coluna.
@@ -123,7 +145,7 @@ def genFirstLine():
             "Voo por Instrumentos Helicóptero (IS 61-002D - Prático)")
 
 
-def parseInfoByCANAC(canac):
+def parse_info_by_canac(canac):
     """
     Dado o código ANAC (CANAC) de um centro de instrução, esta função irá baixar as informações relativas a este CIAC
     do site da ANAC, os mapeará para variáveis e retornará uma Tupple no formato adequado à composição do arquivo .CSV
@@ -134,21 +156,21 @@ def parseInfoByCANAC(canac):
     """
 
     # Faz o download da página com as informações do CIAC
-    r = requests.get(f'https://sistemas.anac.gov.br/educator/entidade.Asp?cod={canac}', verify=False)
+    r = requests.get(f'https://sistemas.anac.gov.br/educator/entidade.Asp?cod={canac}')
     t = r.text.splitlines()
 
     # Inicializa todas as variáveis
-    CVDates = []
+    cv_dates = []
 
-    CNPJ = ''
-    CANAC = ''
-    nomeFantasia = ''
+    cnpj = ''
+    canac = ''
+    nome_fantasia = ''
     situacao = ''
     razao = ''
     endereco = ''
     bairro = ''
     cidade = ''
-    UF = ''
+    uf = ''
     telefone = ''
     fax = ''
     site = ''
@@ -161,78 +183,78 @@ def parseInfoByCANAC(canac):
     afa = ''
     ndou = ''
     ndour = ''
-    CPAp = ''
-    COMtp = ''
-    COMSPtp = ''
-    DOVIS141tp = ''
-    DOVSPtp = ''
-    DOVtp = ''
-    ICPAt = ''
-    INVAEADt = ''
-    INVAt = ''
-    INVAp = ''
-    INVHEADt = ''
-    INVHt = ''
-    INVHp = ''
-    INVPLtp = ''
-    INVPLt = ''
-    INVPLp = ''
-    MMACSP141tp = ''
-    MMAC141tp = ''
-    MMACSPtp = ''
-    MMACtp = ''
-    MMAGMPSP141tp = ''
-    MMAGMP141tp = ''
-    MMAGMPSPtp = ''
-    MMAGMPtp = ''
-    MMAASP141tp = ''
-    MMAA141tp = ''
-    MMAASPtp = ''
-    MMAAtp = ''
-    PAGAtp = ''
-    PAGHtp = ''
-    PCAp = ''
-    PCAIFREADt = ''
-    PCHEADt = ''
-    PCHt = ''
-    PCHp = ''
-    PLAEADt = ''
-    PLAt = ''
-    PLAHEADt = ''
-    PLAHt = ''
-    PPLt = ''
-    PPLp = ''
-    PRULtp = ''
-    PRULt = ''
-    PRULp = ''
-    PDULtp = ''
-    PDULt = ''
-    PDULp = ''
-    PPAEADt = ''
-    PPAt = ''
-    PPAp = ''
-    PPHEADt = ''
-    PPHt = ''
-    PPHp = ''
-    ATR42t = ''
-    ATR42CMVt = ''
-    schweizer300t = ''
-    IFRCapp = ''
-    IFREADt = ''
-    IFRt = ''
-    IFRA61p = ''
-    IFRH61Cp = ''
-    IFRH61Dp = ''
+    cpa_p = ''
+    com_tp = ''
+    comsp_tp = ''
+    dovis141_tp = ''
+    dovsp_tp = ''
+    dov_tp = ''
+    icpa_t = ''
+    invaead_t = ''
+    inva_t = ''
+    inva_p = ''
+    invhead_t = ''
+    invh_t = ''
+    invh_p = ''
+    invpl_tp = ''
+    invpl_t = ''
+    invpl_p = ''
+    mmacsp141_tp = ''
+    mmac141_tp = ''
+    mmacsp_tp = ''
+    mmac_tp = ''
+    mmagmpsp141_tp = ''
+    mmagmp141_tp = ''
+    mmagmpsp_tp = ''
+    mmagmp_tp = ''
+    mmaasp141_tp = ''
+    mmaa141_tp = ''
+    mmaasp_tp = ''
+    mmaa_tp = ''
+    paga_tp = ''
+    pagh_tp = ''
+    pca_p = ''
+    pcaifread_t = ''
+    pchead_t = ''
+    pch_t = ''
+    pch_p = ''
+    plaead_t = ''
+    pla_t = ''
+    plahead_t = ''
+    plah_t = ''
+    ppl_t = ''
+    ppl_p = ''
+    prul_tp = ''
+    prul_t = ''
+    prul_p = ''
+    pdul_tp = ''
+    pdul_t = ''
+    pdul_p = ''
+    ppaead_t = ''
+    ppa_t = ''
+    ppa_p = ''
+    pphead_t = ''
+    pph_t = ''
+    pph_p = ''
+    atr42_t = ''
+    atr42_cmv_t = ''
+    schweizer300_t = ''
+    ifr_cap_p = ''
+    ifread_t = ''
+    ifr_t = ''
+    ifra61_p = ''
+    ifrh61_c_p = ''
+    ifrh61_d_p = ''
 
     # Mapeia todas as informações disponíveis no site para as variáveis adequadas
     for lineIndex in range(len(t)):
         line = t[lineIndex]
         if 'CNPJ:&nbsp;' in line:
-            CNPJ = line[(line.index('<b>') + 3):line.index('</B>')]
+            cnpj = line[(line.index('<b>') + 3):line.index('</B>')]
         elif 'Código ANAC:&nbsp;<b>' in line:
-            CANAC = line[(line.index('<b>') + 3):line.index('</B>')]
+            canac = line[(line.index('<b>') + 3):line.index('</B>')]
         elif 'NomeFantasia:&nbsp;<B>' in line:
-            nomeFantasia = line[(line.index('<B>') + 3):line.index('</B>')]
+            nome_fantasia = line[(line.index('<B>') + 3):line.index('</B>')]
         elif 'Situação:&nbsp;' in line:
             a = t[(lineIndex + 1)]
             situacao = a[(a.index('<b>') + 3):a.index('</b>')]
@@ -246,7 +268,7 @@ def parseInfoByCANAC(canac):
         elif 'Cidade:&nbsp;' in line:
             cidade = line[(line.index('<B>') + 3):line.index('</B>')]
         elif 'UF:&nbsp;' in line:
-            UF = line[(line.index('<B>') + 3):line.index('</B>')]
+            uf = line[(line.index('<B>') + 3):line.index('</B>')]
         elif 'Telefone:&nbsp;' in line:
             telefone = line[(line.index('<B>') + 3):line.index('</B>')]
         elif 'Fax:&nbsp;' in line:
@@ -275,510 +297,512 @@ def parseInfoByCANAC(canac):
         elif 'CERTIFICADO DE PILOTO AERODESPORTIVO' in line:
             if 'Prático' in t[(lineIndex + 1)]:
                 try:
-                    CPAp = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(CPAp)
+                    cpa_p = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(cpa_p)
                 except IndexError:
-                    CPAp = t[(lineIndex + 4)]
+                    cpa_p = t[(lineIndex + 4)]
 
         elif 'COMISSÁRIO DE VOO - MODALIDADE SEMIPRESENCIAL' in line:
             if 'Teórico/Prático' in t[(lineIndex+1)]:
                 try:
-                    COMSPtp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(COMSPtp)
+                    comsp_tp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(comsp_tp)
                 except IndexError:
-                    COMSPtp = t[(lineIndex + 4)]
+                    comsp_tp = t[(lineIndex + 4)]
 
         elif 'COMISSÁRIO DE VOO' in line:
             if 'Teórico/Prático' in t[(lineIndex+1)]:
                 try:
-                    COMtp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(COMtp)
+                    com_tp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(com_tp)
                 except IndexError:
-                    COMtp = t[(lineIndex + 4)]
+                    com_tp = t[(lineIndex + 4)]
 
         elif 'DESPACHANTE OPERACIONAL DE VOO (IS 141-003A)' in line:
             if 'Teórico/Prático' in t[(lineIndex+1)]:
                 try:
-                    DOVIS141tp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(DOVIS141tp)
+                    dovis141_tp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(dovis141_tp)
                 except IndexError:
-                    DOVIS141tp = t[(lineIndex + 4)]
+                    dovis141_tp = t[(lineIndex + 4)]
 
         elif 'DESPACHANTE OPERACIONAL DE VOO - MODALIDADE SEMIPRESENCIAL' in line:
             if 'Teórico/Prático' in t[(lineIndex+1)]:
                 try:
-                    DOVSPtp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(DOVSPtp)
+                    dovsp_tp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(dovsp_tp)
                 except IndexError:
-                    DOVSPtp = t[(lineIndex + 4)]
+                    dovsp_tp = t[(lineIndex + 4)]
 
         elif 'DESPACHANTE OPERACIONAL DE VOO' in line:
             if 'Teórico/Prático' in t[(lineIndex+1)]:
                 try:
-                    DOVtp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(DOVtp)
+                    dov_tp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(dov_tp)
                 except IndexError:
-                    DOVtp = t[(lineIndex + 4)]
+                    dov_tp = t[(lineIndex + 4)]
 
         elif 'INSTRUTOR CERTIFICADO DE PILOTO AERODESPORTIVO' in line:
             if 'Teórico' in t[(lineIndex+1)]:
                 try:
-                    ICPAt = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(ICPAt)
+                    icpa_t = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(icpa_t)
                 except IndexError:
-                    ICPAt = t[(lineIndex + 4)]
+                    icpa_t = t[(lineIndex + 4)]
 
         elif 'INSTRUTOR DE VOO AVIÃO - MODALIDADE EAD' in line:
             if 'Teórico' in t[(lineIndex+1)]:
                 try:
-                    INVAEADt = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(INVAEADt)
+                    invaead_t = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(invaead_t)
                 except IndexError:
-                    INVAEADt = t[(lineIndex + 4)]
+                    invaead_t = t[(lineIndex + 4)]
 
         elif 'INSTRUTOR DE VOO AVIÃO' in line:
             if 'Teórico' in t[(lineIndex+1)]:
                 try:
-                    INVAt = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(INVAt)
+                    inva_t = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(inva_t)
                 except IndexError:
-                    INVAt = t[(lineIndex + 4)]
+                    inva_t = t[(lineIndex + 4)]
 
             elif 'Prático' in t[(lineIndex+1)]:
                 try:
-                    INVAp = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(INVAp)
+                    inva_p = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(inva_p)
                 except IndexError:
-                    INVAp = t[(lineIndex + 4)]
+                    inva_p = t[(lineIndex + 4)]
 
         elif 'INSTRUTOR DE VOO HELICÓPTERO - MODALIDADE EAD' in line:
             if 'Teórico' in t[(lineIndex+1)]:
                 try:
-                    INVHEADt = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(INVHEADt)
+                    invhead_t = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(invhead_t)
                 except IndexError:
-                    INVHEADt = t[(lineIndex + 4)]
+                    invhead_t = t[(lineIndex + 4)]
 
         elif 'INSTRUTOR DE VOO HELICÓPTERO' in line:
             if 'Teórico' in t[(lineIndex + 1)]:
                 try:
-                    INVHt = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(INVHt)
+                    invh_t = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(invh_t)
                 except IndexError:
-                    INVHt = t[(lineIndex + 4)]
+                    invh_t = t[(lineIndex + 4)]
 
             elif 'Prático' in t[(lineIndex + 1)]:
                 try:
-                    INVHp = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(INVHp)
+                    invh_p = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(invh_p)
                 except IndexError:
-                    INVHp = t[(lineIndex + 4)]
+                    invh_p = t[(lineIndex + 4)]
 
         elif 'INSTRUTOR DE VOO PLANADOR' in line:
             if 'Teórico/Prático' in t[(lineIndex+1)]:
                 try:
-                    INVPLtp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(INVPLtp)
+                    invpl_tp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(invpl_tp)
                 except IndexError:
-                    INVPLtp = t[(lineIndex + 4)]
+                    invpl_tp = t[(lineIndex + 4)]
 
             elif 'Teórico' in t[(lineIndex+1)]:
                 try:
-                    INVPLt = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(INVPLt)
+                    invpl_t = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(invpl_t)
                 except IndexError:
-                    INVPLt = t[(lineIndex + 4)]
+                    invpl_t = t[(lineIndex + 4)]
 
             elif 'Prático' in t[(lineIndex+1)]:
                 try:
-                    INVPLp = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(INVPLp)
+                    invpl_p = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(invpl_p)
                 except IndexError:
-                    INVPLp = t[(lineIndex + 4)]
+                    invpl_p = t[(lineIndex + 4)]
 
         elif 'MECÂNICO DE MANUTENÇÃO AERONÁUTICA - GRUPO CÉLULA - MODALIDADE SEMIPRESENCIAL (IS 141-002B)' in line:
             if 'Teórico/Prático' in t[(lineIndex+1)]:
                 try:
-                    MMACSP141tp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(MMACSP141tp)
+                    mmacsp141_tp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(mmacsp141_tp)
                 except IndexError:
-                    MMACSP141tp = t[(lineIndex + 4)]
+                    mmacsp141_tp = t[(lineIndex + 4)]
 
         elif 'MECÂNICO DE MANUTENÇÃO AERONÁUTICA - GRUPO CÉLULA - MODALIDADE SEMIPRESENCIAL' in line:
             if 'Teórico/Prático' in t[(lineIndex+1)]:
                 try:
-                    MMACSPtp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(MMACSPtp)
+                    mmacsp_tp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(mmacsp_tp)
                 except IndexError:
-                    MMACSPtp = t[(lineIndex + 4)]
+                    mmacsp_tp = t[(lineIndex + 4)]
 
         elif 'MECÂNICO DE MANUTENÇÃO AERONÁUTICA - Grupo Célula (IS 141-002B)' in line:
             if 'Teórico/Prático' in t[(lineIndex+1)]:
                 try:
-                    MMAC141tp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(MMAC141tp)
+                    mmac141_tp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(mmac141_tp)
                 except IndexError:
-                    MMAC141tp = t[(lineIndex + 4)]
+                    mmac141_tp = t[(lineIndex + 4)]
 
         elif 'MECÂNICO DE MANUTENÇÃO AERONÁUTICA - Grupo Célula' in line:
             if 'Teórico/Prático' in t[(lineIndex+1)]:
                 try:
-                    MMACtp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(MMACtp)
+                    mmac_tp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(mmac_tp)
                 except IndexError:
-                    MMACtp = t[(lineIndex + 4)]
+                    mmac_tp = t[(lineIndex + 4)]
 
         elif 'MECÂNICO DE MANUTENÇÃO AERONÁUTICA - GRUPO MOTOPROPULSOR - MODALIDADE SEMIPRESENCIAL (IS 141-002B)'\
                 in line:
             if 'Teórico/Prático' in t[(lineIndex+1)]:
                 try:
-                    MMAGMPSP141tp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(MMAGMPSP141tp)
+                    mmagmpsp141_tp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(mmagmpsp141_tp)
                 except IndexError:
-                    MMAGMPSP141tp = t[(lineIndex + 4)]
+                    mmagmpsp141_tp = t[(lineIndex + 4)]
 
         elif 'MECÂNICO DE MANUTENÇÃO AERONÁUTICA - GRUPO MOTOPROPULSOR - MODALIDADE SEMIPRESENCIAL' in line:
             if 'Teórico/Prático' in t[(lineIndex+1)]:
                 try:
-                    MMAGMPSPtp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(MMAGMPSPtp)
+                    mmagmpsp_tp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(mmagmpsp_tp)
                 except IndexError:
-                    MMAGMPSPtp = t[(lineIndex + 4)]
+                    mmagmpsp_tp = t[(lineIndex + 4)]
 
         elif 'MECÂNICO DE MANUTENÇÃO AERONÁUTICA - Grupo Motopropulsor (IS 141-002B)' in line:
             if 'Teórico/Prático' in t[(lineIndex+1)]:
                 try:
-                    MMAGMP141tp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(MMAGMP141tp)
+                    mmagmp141_tp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(mmagmp141_tp)
                 except IndexError:
-                    MMAGMP141tp = t[(lineIndex + 4)]
+                    mmagmp141_tp = t[(lineIndex + 4)]
 
         elif 'MECÂNICO DE MANUTENÇÃO AERONÁUTICA - Grupo Motopropulsor' in line:
             if 'Teórico/Prático' in t[(lineIndex+1)]:
                 try:
-                    MMAGMPtp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(MMAGMPtp)
+                    mmagmp_tp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(mmagmp_tp)
                 except IndexError:
-                    MMAGMPtp = t[(lineIndex + 4)]
+                    mmagmp_tp = t[(lineIndex + 4)]
 
         elif 'MECÂNICO DE MANUTENÇÃO AERONÁUTICA - MÓDULO AVIÔNICOS - MODALIDADE SEMIPRESENCIAL (IS 141-002B)' in line:
             if 'Teórico/Prático' in t[(lineIndex+1)]:
                 try:
-                    MMAASP141tp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(MMAASP141tp)
+                    mmaasp141_tp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(mmaasp141_tp)
                 except IndexError:
-                    MMAASP141tp = t[(lineIndex + 4)]
+                    mmaasp141_tp = t[(lineIndex + 4)]
 
         elif 'MECÂNICO DE MANUTENÇÃO AERONÁUTICA - MÓDULO AVIÔNICOS - MODALIDADE SEMIPRESENCIAL' in line:
             if 'Teórico/Prático' in t[(lineIndex+1)]:
                 try:
-                    MMAASPtp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(MMAASPtp)
+                    mmaasp_tp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(mmaasp_tp)
                 except IndexError:
-                    MMAASPtp = t[(lineIndex + 4)]
+                    mmaasp_tp = t[(lineIndex + 4)]
 
         elif 'MECÂNICO DE MANUTENÇÃO AERONÁUTICA - Grupo Aviônicos (IS 141-002B)' in line:
             if 'Teórico/Prático' in t[(lineIndex+1)]:
                 try:
-                    MMAA141tp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(MMAA141tp)
+                    mmaa141_tp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(mmaa141_tp)
                 except IndexError:
-                    MMAA141tp = t[(lineIndex + 4)]
+                    mmaa141_tp = t[(lineIndex + 4)]
 
         elif 'MECÂNICO DE MANUTENÇÃO AERONÁUTICA - Grupo Aviônicos' in line:
             if 'Teórico/Prático' in t[(lineIndex+1)]:
                 try:
-                    MMAAtp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(MMAAtp)
+                    mmaa_tp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(mmaa_tp)
                 except IndexError:
-                    MMAAtp = t[(lineIndex + 4)]
+                    mmaa_tp = t[(lineIndex + 4)]
 
         elif 'PILOTO AGRÍCOLA DE AVIÃO' in line:
             if 'Teórico/Prático' in t[(lineIndex+1)]:
                 try:
-                    PAGAtp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(PAGAtp)
+                    paga_tp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(paga_tp)
                 except IndexError:
-                    PAGAtp = t[(lineIndex + 4)]
+                    paga_tp = t[(lineIndex + 4)]
 
         elif 'PILOTO AGRÍCOLA DE HELICÓPTERO' in line:
             if 'Teórico/Prático' in t[(lineIndex+1)]:
                 try:
-                    PAGHtp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(PAGHtp)
+                    pagh_tp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(pagh_tp)
                 except IndexError:
-                    PAGHtp = t[(lineIndex + 4)]
+                    pagh_tp = t[(lineIndex + 4)]
 
         elif 'PILOTO COMERCIAL (AVIÃO)' in line:
             if 'Prático' in t[(lineIndex+1)]:
                 try:
-                    PCAp = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(PCAp)
+                    pca_p = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(pca_p)
                 except IndexError:
-                    PCAp = t[(lineIndex + 4)]
+                    pca_p = t[(lineIndex + 4)]
 
         elif 'PILOTO COMERCIAL DE AVIÃO/IFR - MODALIDADE EAD' in line:
             if 'Teórico' in t[(lineIndex+1)]:
                 try:
-                    PCAIFREADt = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(PCAIFREADt)
+                    pcaifread_t = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(pcaifread_t)
                 except IndexError:
-                    PCAIFREADt = t[(lineIndex + 4)]
+                    pcaifread_t = t[(lineIndex + 4)]
 
         elif 'PILOTO COMERCIAL DE HELICÓPTERO - MODALIDADE EAD' in line:
             if 'Teórico' in t[(lineIndex+1)]:
                 try:
-                    PCHEADt = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(PCHEADt)
+                    pchead_t = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(pchead_t)
                 except IndexError:
-                    PCHEADt = t[(lineIndex + 4)]
+                    pchead_t = t[(lineIndex + 4)]
 
         elif 'PILOTO COMERCIAL DE HELICÓPTERO' in line:
             if 'Teórico' in t[(lineIndex+1)]:
                 try:
-                    PCHt = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(PCHt)
+                    pch_t = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(pch_t)
                 except IndexError:
-                    PCHt = t[(lineIndex + 4)]
+                    pch_t = t[(lineIndex + 4)]
 
             elif 'Prático' in t[(lineIndex+1)]:
                 try:
-                    PCHp = t[(lineIndex+4)].split()[2]
-                    CVDates.append(PCHp)
+                    pch_p = t[(lineIndex+4)].split()[2]
+                    cv_dates.append(pch_p)
                 except IndexError:
-                    PCHp = t[(lineIndex + 4)]
+                    pch_p = t[(lineIndex + 4)]
 
         elif 'PILOTO DE LINHA AÉREA DE AVIÃO - MODALIDADE EAD' in line:
             if 'Teórico' in t[(lineIndex+1)]:
                 try:
-                    PLAEADt = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(PLAEADt)
+                    plaead_t = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(plaead_t)
                 except IndexError:
-                    PLAEADt = t[(lineIndex + 4)]
+                    plaead_t = t[(lineIndex + 4)]
 
         elif 'PILOTO DE LINHA AÉREA DE AVIÃO' in line:
             if 'Teórico' in t[(lineIndex+1)]:
                 try:
-                    PLAt = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(PLAt)
+                    pla_t = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(pla_t)
                 except IndexError:
-                    PLAt = t[(lineIndex + 4)]
+                    pla_t = t[(lineIndex + 4)]
 
         elif 'PILOTO DE LINHA AÉREA DE HELICÓPTERO - MODALIDADE EAD' in line:
             if 'Teórico' in t[(lineIndex+1)]:
                 try:
-                    PLAHEADt = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(PLAHEADt)
+                    plahead_t = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(plahead_t)
                 except IndexError:
-                    PLAHEADt = t[(lineIndex + 4)]
+                    plahead_t = t[(lineIndex + 4)]
 
         elif 'PILOTO DE LINHA AÉREA DE HELICÓPTERO' in line:
             if 'Teórico' in t[(lineIndex+1)]:
                 try:
-                    PLAHt = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(PLAHt)
+                    plah_t = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(plah_t)
                 except IndexError:
-                    PLAHt = t[(lineIndex + 4)]
+                    plah_t = t[(lineIndex + 4)]
 
         elif 'PILOTO DE PLANADOR' in line:
             if 'Teórico' in t[(lineIndex+1)]:
                 try:
-                    PPLt = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(PPLt)
+                    ppl_t = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(ppl_t)
                 except IndexError:
-                    PPLt = t[(lineIndex + 4)]
+                    ppl_t = t[(lineIndex + 4)]
 
             elif 'Prático' in t[(lineIndex+1)]:
                 try:
-                    PPLp = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(PPLp)
+                    ppl_p = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(ppl_p)
                 except IndexError:
-                    PPLp = t[(lineIndex + 4)]
+                    ppl_p = t[(lineIndex + 4)]
 
         elif 'PILOTO DE RECREIO DE ULTRALEVE' in line:
             if 'Teórico/Prático' in t[(lineIndex+1)]:
                 try:
-                    PRULtp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(PRULtp)
+                    prul_tp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(prul_tp)
                 except IndexError:
-                    PRULtp = t[(lineIndex + 4)]
+                    prul_tp = t[(lineIndex + 4)]
 
             elif 'Teórico' in t[(lineIndex+1)]:
                 try:
-                    PRULt = t[(lineIndex+4)].split()[2]
-                    CVDates.append(PRULt)
+                    prul_t = t[(lineIndex+4)].split()[2]
+                    cv_dates.append(prul_t)
                 except IndexError:
-                    PRULt = t[(lineIndex + 4)]
+                    prul_t = t[(lineIndex + 4)]
 
             elif 'Prático' in t[(lineIndex+1)]:
                 try:
-                    PRULp = t[(lineIndex+4)].split()[2]
-                    CVDates.append(PRULp)
+                    prul_p = t[(lineIndex+4)].split()[2]
+                    cv_dates.append(prul_p)
                 except IndexError:
-                    PRULp = t[(lineIndex + 4)]
+                    prul_p = t[(lineIndex + 4)]
 
         elif 'PILOTO DESPORTIVO DE ULTRALEVE' in line:
             if 'Teórico/Prático' in t[(lineIndex+1)]:
                 try:
-                    PDULtp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(PDULtp)
+                    pdul_tp = datetime.datetime.strptime(t[(lineIndex+4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(pdul_tp)
                 except IndexError:
-                    PDULtp = t[(lineIndex + 4)]
+                    pdul_tp = t[(lineIndex + 4)]
 
             elif 'Teórico' in t[(lineIndex+1)]:
                 try:
-                    PDULt = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(PDULt)
+                    pdul_t = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(pdul_t)
                 except IndexError:
-                    PDULt = t[(lineIndex + 4)]
+                    pdul_t = t[(lineIndex + 4)]
 
             elif 'Prático' in t[(lineIndex+1)]:
                 try:
-                    PDULp = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(PDULp)
+                    pdul_p = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(pdul_p)
                 except IndexError:
-                    PDULp = t[(lineIndex + 4)]
+                    pdul_p = t[(lineIndex + 4)]
 
         elif 'PILOTO PRIVADO DE AVIÃO - MODALIDADE EAD' in line:
             if 'Teórico' in t[(lineIndex+1)]:
                 try:
-                    PPAEADt = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(PPAEADt)
+                    ppaead_t = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(ppaead_t)
                 except IndexError:
-                    PPAEADt = t[(lineIndex + 4)]
+                    ppaead_t = t[(lineIndex + 4)]
 
         elif 'PILOTO PRIVADO DE AVIÃO' in line:
             if 'Teórico' in t[(lineIndex+1)]:
                 try:
-                    PPAt = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(PPAt)
+                    ppa_t = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(ppa_t)
                 except IndexError:
-                    PPAt = t[(lineIndex + 4)]
+                    ppa_t = t[(lineIndex + 4)]
 
             elif 'Prático' in t[(lineIndex+1)]:
                 try:
-                    PPAp = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(PPAp)
+                    ppa_p = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(ppa_p)
                 except IndexError:
-                    PPAp = t[(lineIndex + 4)]
+                    ppa_p = t[(lineIndex + 4)]
 
         elif 'PILOTO PRIVADO DE HELICÓPTERO - MODALIDADE EAD' in line:
             if 'Teórico' in t[(lineIndex+1)]:
                 try:
-                    PPHEADt = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(PPHEADt)
+                    pphead_t = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(pphead_t)
                 except IndexError:
-                    PPHEADt = t[(lineIndex + 4)]
+                    pphead_t = t[(lineIndex + 4)]
 
         elif 'PILOTO PRIVADO DE HELICÓPTERO' in line:
             if 'Teórico' in t[(lineIndex+1)]:
                 try:
-                    PPHt = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(PPHt)
+                    pph_t = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(pph_t)
                 except IndexError:
-                    PPHt = t[(lineIndex + 4)]
+                    pph_t = t[(lineIndex + 4)]
 
             elif 'Prático' in t[(lineIndex+1)]:
                 try:
-                    PPHp = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(PPHp)
+                    pph_p = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(pph_p)
                 except IndexError:
-                    PPHp = t[(lineIndex + 4)]
+                    pph_p = t[(lineIndex + 4)]
 
         elif 'TREINAMENTO DE SOLO ATR-42 - CMV' in line:
             if 'Teórico' in t[(lineIndex+1)]:
                 try:
-                    ATR42CMVt = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(ATR42CMVt)
+                    atr42_cmv_t = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(atr42_cmv_t)
                 except IndexError:
-                    ATR42CMVt = t[(lineIndex + 4)]
+                    atr42_cmv_t = t[(lineIndex + 4)]
 
         elif 'TREINAMENTO DE SOLO ATR-42' in line:
             if 'Teórico' in t[(lineIndex+1)]:
                 try:
-                    ATR42t = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(ATR42CMVt)
+                    atr42_t = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(atr42_cmv_t)
                 except IndexError:
-                    ATR42t = t[(lineIndex + 4)]
+                    atr42_t = t[(lineIndex + 4)]
 
         elif 'TREINAMENTO DE SOLO SCHWEIZER 300' in line:
             if 'Teórico' in t[(lineIndex+1)]:
                 try:
-                    schweizer300t = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(schweizer300t)
+                    schweizer300_t = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(schweizer300_t)
                 except IndexError:
-                    schweizer300t = t[(lineIndex + 4)]
+                    schweizer300_t = t[(lineIndex + 4)]
 
         elif 'VOO POR INSTRUMENTOS (SOB CAPOTA)' in line:
             if 'Prático' in t[(lineIndex+1)]:
                 try:
-                    IFRCapp = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(IFRCapp)
+                    ifr_cap_p = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(ifr_cap_p)
                 except IndexError:
-                    IFRCapp = t[(lineIndex + 4)]
+                    ifr_cap_p = t[(lineIndex + 4)]
 
         elif 'VOO POR INSTRUMENTOS - MODALIDADE EAD' in line:
             if 'Teórico' in t[(lineIndex+1)]:
                 try:
-                    IFREADt = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(IFREADt)
+                    ifread_t = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(ifread_t)
                 except IndexError:
-                    IFREADt = t[(lineIndex + 4)]
+                    ifread_t = t[(lineIndex + 4)]
 
         elif 'VOO POR INSTRUMENTOS AVIÃO (IS 61-002D)' in line:
             if 'Prático' in t[(lineIndex+1)]:
                 try:
-                    IFRA61p = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(IFRA61p)
+                    ifra61_p = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(ifra61_p)
                 except IndexError:
-                    IFRA61p = t[(lineIndex + 4)]
+                    ifra61_p = t[(lineIndex + 4)]
 
         elif 'VOO POR INSTRUMENTOS HELICÓPTERO (IS 61-002C)' in line:
             if 'Prático' in t[(lineIndex+1)]:
                 try:
-                    IFRH61Cp = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(IFRH61Cp)
+                    ifrh61_c_p = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(ifrh61_c_p)
                 except IndexError:
-                    IFRH61Cp = t[(lineIndex + 4)]
+                    ifrh61_c_p = t[(lineIndex + 4)]
 
         elif 'VOO POR INSTRUMENTOS HELICÓPTERO (IS 61-002D)' in line:
             if 'Prático' in t[(lineIndex+1)]:
                 try:
-                    IFRH61Dp = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(IFRH61Dp)
+                    ifrh61_d_p = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(ifrh61_d_p)
                 except IndexError:
-                    IFRH61Dp = t[(lineIndex + 4)]
+                    ifrh61_d_p = t[(lineIndex + 4)]
 
         elif 'VOO POR INSTRUMENTOS' in line:
             if 'Teórico' in t[(lineIndex + 1)]:
                 try:
-                    IFRt = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
-                    CVDates.append(IFRt)
+                    ifr_t = datetime.datetime.strptime(t[(lineIndex + 4)].split()[2], '%d/%m/%Y')
+                    cv_dates.append(ifr_t)
                 except IndexError:
-                    IFRt = t[(lineIndex + 4)]
+                    ifr_t = t[(lineIndex + 4)]
 
     # Verifica qual curso está mais próximo de vencer.
-    IDates = []
-    for i in CVDates:
+    i_dates = []
+    for i in cv_dates:
         if type(i) == datetime.datetime:
-            IDates.append(i)
+            i_dates.append(i)
 
     try:
-        PrCaV = min(IDates)
+        pr_ca_v = min(i_dates)
     except ValueError:
-        PrCaV = ''
+        pr_ca_v = ''
 
     # Retorna uma string no formato especificado em genFirstLine, correspondente a cada CIAC
 
-    return (CANAC,
-            nomeFantasia,
+    print(f"[{datetime.datetime.now().strftime('%H:%M:%S')}] Informações mapeadas para o CANAC {canac} - {nome_fantasia}")
+
+    return (canac,
+            nome_fantasia,
             razao,
-            CNPJ,
+            cnpj,
             situacao,
             endereco,
             bairro,
             cidade,
-            UF,
+            uf,
             telefone,
             fax,
             site,
@@ -791,77 +815,87 @@ def parseInfoByCANAC(canac):
             afa,
             ndou,
             ndour,
-            PrCaV,
-            CPAp,
-            COMSPtp,
-            COMtp,
-            DOVIS141tp,
-            DOVSPtp,
-            DOVtp,
-            ICPAt,
-            INVAEADt,
-            INVAt,
-            INVAp,
-            INVHEADt,
-            INVHt,
-            INVHp,
-            INVPLtp,
-            INVPLt,
-            INVPLp,
-            MMACSP141tp,
-            MMAC141tp,
-            MMACSPtp,
-            MMACtp,
-            MMAGMPSP141tp,
-            MMAGMP141tp,
-            MMAGMPSPtp,
-            MMAGMPtp,
-            MMAASP141tp,
-            MMAA141tp,
-            MMAASPtp,
-            MMAAtp,
-            PAGAtp,
-            PAGHtp,
-            PCAp,
-            PCAIFREADt,
-            PCHEADt,
-            PCHt,
-            PCHp,
-            PLAEADt,
-            PLAt,
-            PLAHEADt,
-            PLAHt,
-            PPLt,
-            PPLp,
-            PRULtp,
-            PRULt,
-            PRULp,
-            PDULtp,
-            PDULt,
-            PDULp,
-            PPAEADt,
-            PPAt,
-            PPAp,
-            PPHEADt,
-            PPHt,
-            PPHp,
-            ATR42t,
-            ATR42CMVt,
-            schweizer300t,
-            IFRCapp,
-            IFREADt,
-            IFRt,
-            IFRA61p,
-            IFRH61Cp,
-            IFRH61Dp)
+            pr_ca_v,
+            cpa_p,
+            comsp_tp,
+            com_tp,
+            dovis141_tp,
+            dovsp_tp,
+            dov_tp,
+            icpa_t,
+            invaead_t,
+            inva_t,
+            inva_p,
+            invhead_t,
+            invh_t,
+            invh_p,
+            invpl_tp,
+            invpl_t,
+            invpl_p,
+            mmacsp141_tp,
+            mmac141_tp,
+            mmacsp_tp,
+            mmac_tp,
+            mmagmpsp141_tp,
+            mmagmp141_tp,
+            mmagmpsp_tp,
+            mmagmp_tp,
+            mmaasp141_tp,
+            mmaa141_tp,
+            mmaasp_tp,
+            mmaa_tp,
+            paga_tp,
+            pagh_tp,
+            pca_p,
+            pcaifread_t,
+            pchead_t,
+            pch_t,
+            pch_p,
+            plaead_t,
+            pla_t,
+            plahead_t,
+            plah_t,
+            ppl_t,
+            ppl_p,
+            prul_tp,
+            prul_t,
+            prul_p,
+            pdul_tp,
+            pdul_t,
+            pdul_p,
+            ppaead_t,
+            ppa_t,
+            ppa_p,
+            pphead_t,
+            pph_t,
+            pph_p,
+            atr42_t,
+            atr42_cmv_t,
+            schweizer300_t,
+            ifr_cap_p,
+            ifread_t,
+            ifr_t,
+            ifra61_p,
+            ifrh61_c_p,
+            ifrh61_d_p)
 
 
-CANACs = getCanacsFromIndex(indexFile)
-print(f'{len(CANACs)} CANACs retirados do arquivo de índice.')
+if __name__ == '__main__':
+    outputFile = f'{input("caminho e nome do arquivo sem extensão: ")}.csv'
+    process_start = datetime.datetime.now()
+    CANACs = get_canacs_from_index()
 
+    print(f'[{datetime.datetime.now().strftime("%H:%M:%S")}] Buscando e transcrevendo informações para {outputFile}\n')
+    with open(outputFile, 'w', newline='', encoding='utf-8-sig') as fileHandle:
+        csvWriter = csv.writer(fileHandle, dialect='excel')
+        csvWriter.writerow(gen_first_line())
+        for CIACCANAC in CANACs:
+            csvWriter.writerow(parse_info_by_canac(CIACCANAC))
 
-with open(outputFile, 'w', newline='', encoding='utf8') as fileHandle:
-    csvWriter = csv.writer(fileHandle, dialect='excel')
-    csvWriter.writerow(genFirstLine())
-    for CIACCANAC in CANACs:
-        csvWriter.writerow(parseInfoByCANAC(CIACCANAC))
+    delta_t = str(datetime.datetime.now() - process_start).split(':')
+    print(f"\n[{datetime.datetime.now().strftime('%H:%M:%S')}] processo terminado em "
+          f"{f'{int(delta_t[1])} minuto' if int(delta_t[1]) > 0 else ''}"
+          f"{'s' if int(delta_t[1]) > 1 else ''}"
+          f"{' e ' if int(delta_t[1]) > 0 and round(float(delta_t[2]), 1) > 0 else ''}"
+          f"{f'{round(float(delta_t[2]), 1)} segundo' if float(delta_t[2]) > 0 else ''}"
+          f"{'s' if round(float(delta_t[2]), 1) > 1 else ''}\n")

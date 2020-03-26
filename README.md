@@ -2,12 +2,10 @@
 
 # CIAC INFO.py
 
-É um Código de Request para atualização das iformações das escolas de aviação.
+Código de Request e web scrapping para atualização das informações das escolas de aviação.
 
-Dado um arquivo html contendo o índice de instituições de ensino, retirado do site
-    www.anac.gov.br/educator/index2.aspx, essa função retornará uma lista contendo o código ANAC de todas
-    as instituições de ensino constantes no referido índice.
+Quando executado, o script capta os CANACs cadastrados no índice de educadores da ANAC, capta e mapeia as informações de cada um e exporta para uma planilha em formato csv.
     
  # Gerador de Fichas de Voo
 
-É uma série de arquivos que exportam as fichas de voo utilizada pelas escolas de aviação, podendo personalizadas. 
+Série de arquivos que exportam as fichas de voo utilizadas pelas escolas de aviação a partir do quadro de missões para cada fase do treinamento, podendo personalizadas. 

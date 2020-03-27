@@ -51,3 +51,7 @@ wheels/
 *.egg
 
 *.csv
+.vscode/settings.json
+.pytest_cache/v/cache/stepwise
+.vscode/launch.json
+.pytest_cache/v/cache/nodeids

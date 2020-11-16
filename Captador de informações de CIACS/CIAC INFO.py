@@ -887,7 +887,7 @@ if __name__ == '__main__':
 
     print(f'[{datetime.datetime.now().strftime("%H:%M:%S")}] Buscando e transcrevendo informações para {outputFile}\n')
     with open(outputFile, 'w', newline='', encoding='utf-8-sig') as fileHandle:
-        csvWriter = csv.writer(fileHandle, dialect='excel')
+        csvWriter = csv.writer(fileHandle, dialect='excel', delimiter=";")
         csvWriter.writerow(gen_first_line())
         for CIACCANAC in CANACs:
             csvWriter.writerow(parse_info_by_canac(CIACCANAC))
